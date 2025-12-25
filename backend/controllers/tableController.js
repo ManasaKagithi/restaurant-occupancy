@@ -1,22 +1,18 @@
 import Table from '../models/Table.js'
 
-// Get all tables
 export const getTables = async (req, res) => {
+  const tables = await Table.find()
+  res.json(tables)
+}
+
+export const createTable = async (req, res) => {
   try {
-    const tables = await Table.find()
-    res.json(tables)
+    const { tableNumber, capacity } = req.body
+    const table = new Table({ tableNumber, capacity })
+    await table.save()
+    res.status(201).json(table)
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
 }
 
-// Add a new table
-export const addTable = async (req, res) => {
-  try {
-    const table = new Table(req.body)
-    await table.save()
-    res.status(201).json(table)
-  } catch (err) {
-    res.status(400).json({ error: err.message })
-  }
-}

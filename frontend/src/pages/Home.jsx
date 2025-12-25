@@ -1,23 +1,27 @@
 import { useEffect, useState } from 'react'
-import api from '../services/api'
+import TableCard from '../components/TableCard'
+import ReservationForm from '../components/ReservationForm'
 
-export default function Home() {
+function Home() {
   const [tables, setTables] = useState([])
 
   useEffect(() => {
-    api.get('/tables').then(res => setTables(res.data)).catch(console.error)
+    fetch('http://localhost:4000/api/tables')
+      .then(res => res.json())
+      .then(data => setTables(data))
   }, [])
 
   return (
     <div>
-      <h1>Live Availability</h1>
-      <ul>
-        {tables.map(t => (
-          <li key={t._id}>
-            {t.name} — {t.capacity} seats — {t.status} — {t.section}
-          </li>
+      <h2>Available Tables</h2>
+      <div className="table-grid">
+        {tables.map(table => (
+          <TableCard key={table._id} table={table} />
         ))}
-      </ul>
+      </div>
+      <ReservationForm tables={tables} />
     </div>
   )
 }
+
+export default Home

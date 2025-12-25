@@ -1,9 +1,14 @@
 import mongoose from 'mongoose'
 
 const tableSchema = new mongoose.Schema({
-  number: { type: Number, required: true },
+  tableNumber: { type: Number, required: true, unique: true },
   capacity: { type: Number, required: true },
-  occupied: { type: Boolean, default: false }
+  status: {
+    type: String,
+    enum: ['available', 'reserved', 'occupied'],
+    default: 'available'
+  },
+  lastUpdatedAt: { type: Date, default: Date.now }
 })
 
 export default mongoose.model('Table', tableSchema)
